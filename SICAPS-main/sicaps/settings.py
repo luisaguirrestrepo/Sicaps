@@ -5,7 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-$o*vtrh8l%eas6!38df*s3ei4!@11lp9_-+1*o=(8%g1mz0p7b')
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,.onrender.com').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -88,7 +88,10 @@ STATICFILES_DIRS = [
 
 import mongoengine
 MONGO_HOST = os.environ.get('MONGO_HOST', 'mongodb://localhost:27017/sicaps_db')
-mongoengine.connect(host=MONGO_HOST)
+try:
+    mongoengine.connect(host=MONGO_HOST)
+except Exception as e:
+    print(f"Warning: Could not connect to MongoDB: {e}")
 
 AUTHENTICATION_BACKENDS = [
     'core.backends.CaseInsensitiveModelBackend',
