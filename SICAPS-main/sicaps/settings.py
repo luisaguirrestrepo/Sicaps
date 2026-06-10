@@ -7,6 +7,13 @@ MONGO_URI = os.environ.get("MONGO_URI")
 connect(host=MONGO_URI)
 from pathlib import Path
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://sicaps.onrender.com"
+]
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-$o*vtrh8l%eas6!38df*s3ei4!@11lp9_-+1*o=(8%g1mz0p7b')
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
