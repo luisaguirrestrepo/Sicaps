@@ -103,12 +103,7 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
-import mongoengine
-MONGO_HOST = os.environ.get('MONGO_HOST', 'mongodb://localhost:27017/sicaps_db')
-try:
-    mongoengine.connect(host=MONGO_HOST)
-except Exception as e:
-    print(f"Warning: Could not connect to MongoDB: {e}")
+
 
 AUTHENTICATION_BACKENDS = [
     'core.backends.CaseInsensitiveModelBackend',
