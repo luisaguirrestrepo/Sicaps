@@ -5,7 +5,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-$o*vtrh8l%eas6!38df*s3ei4!@11lp9_-+1*o=(8%g1mz0p7b')
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ["*"]
+
+ALLOWED_HOSTS = [
+    "sicaps.onrender.com"
+]
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
