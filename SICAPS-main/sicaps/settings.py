@@ -5,6 +5,12 @@ import os
 disconnect()  # cierra conexión previa
 connect(host=os.environ.get("MONGO_URI"))
 
+from mongoengine import connect, connection
+import os
+
+if not connection.get_connection():
+    connect(host=os.environ.get("MONGO_URI"))
+
 from pathlib import Path
 
 CSRF_TRUSTED_ORIGINS = [
