@@ -1,1 +1,1 @@
-web: gunicorn SICAPS-main.sicaps.wsgi --log-file -
+web: cd SICAPS-main && gunicorn sicaps.wsgi --log-file -
