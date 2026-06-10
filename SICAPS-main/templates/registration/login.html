@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es-co">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - SICAPS</title>
+    {% load static %}
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-background: #e9eff6;
+            --color-sura-blue: #0b4a88;
+            --color-sura-cyan: #0ea5e9;
+            --color-sura-cyan-dark: #0284c7;
+            --color-text: #102a43;
+            --color-surface: #ffffff;
+        }
+        body {
+            background: radial-gradient(circle at top left, rgba(14, 165, 233, 0.14), transparent 30%), var(--color-background);
+            color: var(--color-text);
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-[var(--color-background)] font-sans antialiased flex items-center justify-center min-h-screen">
+    
+    <div class="w-full max-w-md bg-[var(--color-surface)] rounded-2xl shadow-xl shadow-slate-900/5 p-8 border border-slate-200">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-[var(--color-sura-blue)] tracking-tight">
+                SICAPS<span class="text-[var(--color-sura-cyan)]">.</span>
+            </h1>
+            <p class="text-gray-500 mt-2">Ingrese sus credenciales institucionales</p>
+        </div>
+
+        {% if form.errors %}
+        <div class="bg-red-50 text-red-700 p-4 rounded-xl text-sm mb-6 border border-red-100">
+            Su usuario o contraseña no son correctos. Por favor, intente de nuevo.
+        </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'login' %}" class="space-y-6">
+            {% csrf_token %}
+            <div>
+                <label for="id_username" class="block text-sm font-semibold text-gray-700 mb-2">Usuario</label>
+                <input type="text" name="username" id="id_username" required class="w-full bg-gray-50 border border-gray-200 text-gray-800 py-3 px-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00a4e4] transition-all" autofocus>
+            </div>
+            
+            <div>
+                <label for="id_password" class="block text-sm font-semibold text-gray-700 mb-2">Contraseña</label>
+                <input type="password" name="password" id="id_password" required class="w-full bg-gray-50 border border-gray-200 text-gray-800 py-3 px-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00a4e4] transition-all">
+            </div>
+
+            <button type="submit" class="w-full py-3 px-4 bg-[var(--color-sura-blue)] text-white font-semibold rounded-xl hover:bg-[var(--color-sura-cyan-dark)] shadow-md transition-all transform hover:-translate-y-0.5">
+                Iniciar Sesión
+            </button>
+            <input type="hidden" name="next" value="{{ next }}">
+            
+            <div class="mt-4 text-sm text-right">
+                <a href="{% url 'password_reset' %}" class="text-[#00a4e4] font-semibold hover:underline">¿Olvidó su contraseña?</a>
+            </div>
+            <div class="text-center mt-4">
+                <p class="text-sm text-gray-500">¿No tiene una cuenta? <a href="{% url 'core:registro' %}" class="text-[#00a4e4] font-semibold hover:underline">Regístrese aquí</a></p>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>

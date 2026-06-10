@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es-co">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - SICAPS</title>
+    {% load static %}
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-background: #e9eff6;
+            --color-sura-blue: #0b4a88;
+            --color-sura-cyan: #0ea5e9;
+            --color-sura-cyan-dark: #0284c7;
+            --color-text: #102a43;
+            --color-surface: #ffffff;
+        }
+        body {
+            background: radial-gradient(circle at top left, rgba(14, 165, 233, 0.14), transparent 30%), var(--color-background);
+            color: var(--color-text);
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-[var(--color-background)] font-sans antialiased flex items-center justify-center min-h-screen py-10">
+    
+    <div class="w-full max-w-md bg-[var(--color-surface)] rounded-2xl shadow-xl shadow-slate-900/5 p-8 border border-slate-200">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-[var(--color-sura-blue)] tracking-tight">
+                SICAPS<span class="text-[var(--color-sura-cyan)]">.</span>
+            </h1>
+            <p class="text-gray-500 mt-2">Cree su cuenta en el sistema</p>
+        </div>
+
+        {% if messages %}
+        <div class="mb-6 space-y-2">
+            {% for message in messages %}
+            <div class="p-4 rounded-xl text-sm {% if message.tags == 'error' %}bg-red-50 text-red-700 border border-red-100{% else %}bg-green-50 text-green-700 border border-green-100{% endif %} flex items-center space-x-3">
+                <span>{{ message }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'core:registro' %}" class="space-y-5">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="bg-red-50 text-red-700 p-4 rounded-xl border border-red-100 mb-4 text-sm">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Nombre Completo</label>
+                {{ form.nombre_completo }}
+                {% for error in form.nombre_completo.errors %}
+                    <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Correo Electrónico</label>
+                {{ form.email }}
+                {% for error in form.email.errors %}
+                    <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                {% endfor %}
+                <p class="text-xs text-gray-400 mt-1">Éste será su usuario para iniciar sesión.</p>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Documento de Identidad (Cédula)</label>
+                {{ form.documento }}
+                {% for error in form.documento.errors %}
+                    <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                {% endfor %}
+                <p class="text-xs text-gray-400 mt-1">Este número aparecerá en sus historias y certificados.</p>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Teléfono / Celular</label>
+                {{ form.telefono }}
+                {% for error in form.telefono.errors %}
+                    <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                {% endfor %}
+                <p class="text-xs text-gray-400 mt-1">Lo usaremos para notificarle vía SMS (si está habilitado).</p>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Fecha de nacimiento</label>
+                {{ form.fecha_nacimiento }}
+                {% for error in form.fecha_nacimiento.errors %}
+                    <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Contraseña</label>
+                {{ form.password }}
+                {% for error in form.password.errors %}
+                    <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Confirmar contraseña</label>
+                {{ form.confirm_password }}
+                {% for error in form.confirm_password.errors %}
+                    <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="w-full py-3 px-4 bg-[var(--color-sura-blue)] text-white font-semibold rounded-xl hover:bg-[var(--color-sura-cyan-dark)] shadow-md transition-all transform hover:-translate-y-0.5 mt-2">
+                Registrarse
+            </button>
+
+            <div class="text-center mt-4">
+                <p class="text-sm text-gray-500">¿Ya tiene una cuenta? <a href="{% url 'login' %}" class="text-[var(--color-sura-cyan)] font-semibold hover:underline">Inicie sesión aquí</a></p>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+<aside class="w-64 bg-slate-950 text-slate-100 shadow-xl flex-shrink-0 border-r border-slate-900/10 flex flex-col z-20">
+        <div class="h-20 flex items-center justify-center border-b border-slate-900/10 px-6">
+        <h1 class="text-2xl font-bold text-white tracking-tight">
+            SICAPS<span class="text-sky-400">.</span>
+        </h1>
+    </div>
+
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+        <a href="{% url 'core:dashboard' %}" class="flex items-center space-x-3 px-4 py-3 {% if request.resolver_match.url_name == 'dashboard' %}bg-slate-800 text-white{% else %}text-slate-400 hover:bg-slate-800 hover:text-white{% endif %} rounded-2xl font-medium transition duration-200">
+            <i class="fa-solid fa-house w-5 text-center"></i>
+            <span>Inicio</span>
+        </a>
+        
+        {% if request.user.is_superuser or 'Administrador' in request.user.groups.all|stringformat:'s' or 'Psicologo' in request.user.groups.all|stringformat:'s' %}
+        <a href="{% url 'core:pacientes' %}" class="flex items-center space-x-3 px-4 py-3 {% if 'paciente' in request.resolver_match.url_name %}bg-slate-800 text-white{% else %}text-slate-400 hover:bg-slate-800 hover:text-white{% endif %} rounded-2xl font-medium transition duration-200">
+            <i class="fa-solid fa-users w-5 text-center"></i>
+            <span>Pacientes</span>
+        </a>
+        {% endif %}
+        {% if request.user.is_superuser or 'Administrador' in request.user.groups.all|stringformat:'s' %}
+        <a href="{% url 'core:psicologos' %}" class="flex items-center space-x-3 px-4 py-3 {% if request.resolver_match.url_name == 'psicologos' or request.resolver_match.url_name == 'editar_psicologo' %}bg-slate-800 text-white{% else %}text-slate-400 hover:bg-slate-800 hover:text-white{% endif %} rounded-2xl font-medium transition duration-200">
+            <i class="fa-solid fa-user-doctor w-5 text-center"></i>
+            <span>Psicólogos</span>
+        </a>
+        {% endif %}
+        
+        <a href="{% url 'core:agenda' %}" class="flex items-center space-x-3 px-4 py-3 {% if request.resolver_match.url_name == 'agenda' %}bg-slate-800 text-white{% else %}text-slate-400 hover:bg-slate-800 hover:text-white{% endif %} rounded-2xl font-medium transition duration-200">
+            <i class="fa-regular fa-calendar-check w-5 text-center"></i>
+            <span>Citas</span>
+        </a>
+    </nav>
+
+        <div class="p-4 border-t border-slate-900/10">
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="w-full flex items-center space-x-3 px-4 py-3 text-slate-400 hover:text-red-400 hover:bg-slate-800 rounded-2xl transition duration-200">
+                <i class="fa-solid fa-arrow-right-from-bracket w-5 text-center"></i>
+                <span>Cerrar Sesión</span>
+            </button>
+        </form>
+    </div>
+</aside>

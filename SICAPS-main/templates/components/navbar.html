@@ -1,0 +1,113 @@
+<header class="h-20 bg-white/80 backdrop-blur-xl border-b border-slate-200/70 flex items-center justify-between px-8 z-10 shadow-sm shadow-slate-900/5">
+    <div class="flex items-center">
+                <h2 class="text-xl font-semibold text-gray-800 tracking-wide">
+            {% block page_title %}Panel Principal{% endblock %}
+        </h2>
+    </div>
+
+        <div class="flex items-center space-x-6">
+                <div class="relative">
+            <button id="notification-btn" class="text-gray-400 hover:text-[var(--color-sura-cyan)] transition-colors relative focus:outline-none">
+                <i class="fa-regular fa-bell text-xl"></i>
+                <span id="red-dot" class="absolute top-0 right-0 -mt-1 -mr-1 flex h-3 w-3 {% if not notificaciones %}hidden{% endif %}">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                </span>
+            </button>
+            
+                        <div id="notification-dropdown" class="hidden absolute right-0 mt-3 w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 py-2 z-50 origin-top-right transform transition-all duration-200 overflow-hidden">
+                                <div class="px-4 py-3 flex justify-between items-center">
+                    <h3 class="text-2xl font-extrabold text-gray-900 tracking-tight">Notificaciones</h3>
+                </div>
+                
+                <div class="px-4 pb-2">
+                    <h4 class="text-sm font-bold text-gray-800">Recientes</h4>
+                </div>
+                
+                                <div class="max-h-[380px] overflow-y-auto">
+                    {% for notif in notificaciones %}
+                    <a href="#" class="flex px-4 py-2 hover:bg-gray-50 transition-colors relative group">
+                                                <div class="relative mr-3 flex-shrink-0">
+                            <div class="h-14 w-14 rounded-full bg-gray-100 border border-gray-200 overflow-hidden flex items-center justify-center">
+                                <i class="fa-regular fa-user text-gray-400 text-2xl"></i>
+                            </div>
+                                                        <div class="absolute -bottom-1 -right-1 h-7 w-7 rounded-full {{ notif.bg_color|default:'bg-blue-500' }} border-2 border-white flex items-center justify-center text-white">
+                                <i class="{{ notif.icono }} text-[10px]"></i>
+                            </div>
+                        </div>
+                        
+                                                <div class="flex-1 pr-4">
+                            <p class="text-[14px] text-gray-800 leading-tight">
+                                <strong>Sistema SICAPS</strong> {{ notif.titulo|lower }} {{ notif.mensaje|lower }}.
+                            </p>
+                            <span class="text-[13px] font-semibold text-[var(--color-sura-blue)] block mt-1">{{ notif.tiempo }}</span>
+                        </div>
+                        
+                                                <div class="flex items-center justify-center">
+                            <div class="h-3 w-3 rounded-full bg-[var(--color-sura-cyan)] unread-dot"></div>
+                        </div>
+                    </a>
+                    {% empty %}
+                    <div class="px-4 py-10 text-center flex flex-col items-center">
+                        <div class="h-16 w-16 bg-gray-100 rounded-full flex items-center justify-center mb-3">
+                            <i class="fa-regular fa-bell-slash text-gray-400 text-2xl"></i>
+                        </div>
+                        <h4 class="text-[15px] font-bold text-gray-800">No tienes notificaciones</h4>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                                <div class="px-4 py-3">
+                    <button class="w-full py-2 bg-gray-100 hover:bg-gray-200 text-[15px] font-semibold text-gray-800 rounded-lg transition-colors">
+                        Ver notificaciones anteriores
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const btn = document.getElementById('notification-btn');
+                const dropdown = document.getElementById('notification-dropdown');
+                const redDot = document.getElementById('red-dot');
+                const unreadDots = document.querySelectorAll('.unread-dot');
+                
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    dropdown.classList.toggle('hidden');
+                    
+                    // Al abrir, se marcan como leidas escondiendo los puntos
+                    if(redDot) redDot.classList.add('hidden');
+                    unreadDots.forEach(dot => dot.classList.add('hidden'));
+                });
+                
+                document.addEventListener('click', function(e) {
+                    if (!dropdown.contains(e.target) && !btn.contains(e.target)) {
+                        dropdown.classList.add('hidden');
+                    }
+                });
+            });
+        </script>
+        
+        <div class="flex items-center space-x-4">
+            <div class="text-right hidden md:block">
+                <p class="text-sm font-semibold text-slate-900">{{ user.first_name|default:user.username }}</p>
+                <p class="text-xs text-slate-500">
+                    {% if user.is_superuser %}Admin Supremo
+                    {% elif user.groups.exists %}{{ user.groups.first.name }}
+                    {% else %}Usuario{% endif %}
+                </p>
+            </div>
+            <a href="{% url 'core:perfil' %}" title="Mi Perfil" class="h-10 w-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-900 font-bold hover:bg-slate-200 hover:scale-105 transition-all cursor-pointer">
+                {{ user.username.0|upper }}
+            </a>
+            
+                        <form method="post" action="{% url 'logout' %}" class="ml-4">
+                {% csrf_token %}
+                <button type="submit" class="text-gray-400 hover:text-red-500 transition-colors" title="Cerrar Sesión">
+                    <i class="fa-solid fa-arrow-right-from-bracket text-lg"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</header>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid #e2e8f0; }
+        .header { background-color: #0033a0; padding: 30px; text-align: center; }
+        .header h1 { color: #ffffff; margin: 0; font-size: 28px; letter-spacing: -0.5px; }
+        .header h1 span { color: #00a4e4; }
+        .content { padding: 40px 30px; color: #334155; }
+        .content h2 { margin-top: 0; color: #1e293b; font-size: 20px; }
+        .card { background-color: #f1f5f9; border-radius: 12px; padding: 20px; margin-top: 24px; }
+        .detail-row { display: flex; margin-bottom: 12px; }
+        .detail-label { font-weight: bold; width: 120px; color: #64748b; }
+        .detail-value { color: #0f172a; font-weight: 500; }
+        .footer { background-color: #f8fafc; padding: 20px; text-align: center; font-size: 13px; color: #94a3b8; border-top: 1px solid #e2e8f0; }
+        .button { display: inline-block; padding: 12px 24px; background-color: #00a4e4; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 24px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>SICAPS<span>.</span></h1>
+        </div>
+        <div class="content">
+            <h2>Confirmación de Cita Médica</h2>
+            <p>Hola <strong>{{ paciente.nombre_completo }}</strong>,</p>
+            <p>Tu cita psicológica ha sido agendada exitosamente en nuestro sistema. A continuación encontrarás los detalles:</p>
+            
+            <div class="card">
+                <div class="detail-row">
+                    <div class="detail-label">Fecha:</div>
+                    <div class="detail-value">{{ cita.fecha }}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Hora:</div>
+                    <div class="detail-value">{{ cita.hora }}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Motivo:</div>
+                    <div class="detail-value">{{ cita.motivo }}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Estado:</div>
+                    <div class="detail-value" style="color: #047857;">{{ cita.estado }}</div>
+                </div>
+            </div>
+            
+            <p style="margin-top: 24px; font-size: 14px; color: #64748b;">
+                * Recuerda que si deseas cancelar tu cita, debes hacerlo con al menos 24 horas de antelación desde tu portal de paciente.
+            </p>
+        </div>
+        <div class="footer">
+            <p>© 2026 SICAPS. Sistema Integrado de Control y Administración.</p>
+            <p>Este es un correo automático, por favor no respondas a este mensaje.</p>
+        </div>
+    </div>
+</body>
+</html>

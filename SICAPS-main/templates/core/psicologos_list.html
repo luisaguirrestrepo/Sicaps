@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block title %}Psicólogos - SICAPS{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-2xl shadow p-8">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <h2 class="text-2xl font-bold">Psicólogos</h2>
+    </div>
+
+    <div class="mb-6">
+        <button id="btn-toggle-create-psicologo" type="button" class="inline-flex items-center justify-center px-5 py-3 bg-[var(--color-sura-cyan)] text-white rounded-xl text-sm font-semibold hover:bg-[var(--color-sura-blue)] shadow-sm transition-colors">
+            Nuevo psicólogo
+        </button>
+    </div>
+
+    <div id="create-psicologo-panel" class="{% if form.errors %}block{% else %}hidden{% endif %} fixed inset-0 z-50 overflow-y-auto bg-gray-900/50 backdrop-blur-sm flex items-center justify-center px-4 py-8">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 transform transition-all">
+            <div class="flex justify-between items-center mb-5">
+                <h3 class="text-xl font-bold text-[var(--color-sura-blue)]">Crear nuevo psicólogo</h3>
+                <button id="btn-close-create-psicologo" type="button" class="text-gray-400 hover:text-gray-600">
+                    <i class="fa-solid fa-times text-xl"></i>
+                </button>
+            </div>
+            <form method="post" action="{% url 'core:psicologos' %}" class="space-y-4">
+                {% csrf_token %}
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Nombre completo</label>
+                    {{ form.nombre_completo }}
+                    {% for error in form.nombre_completo.errors %}
+                    <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Correo electrónico</label>
+                    {{ form.email }}
+                    {% for error in form.email.errors %}
+                    <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Tarjeta profesional</label>
+                    {{ form.tarjeta_profesional }}
+                    {% for error in form.tarjeta_profesional.errors %}
+                    <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Contraseña</label>
+                    {{ form.password }}
+                    {% for error in form.password.errors %}
+                    <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Confirmar contraseña</label>
+                    {{ form.confirm_password }}
+                    {% for error in form.confirm_password.errors %}
+                    <p class="text-xs text-red-600 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div class="mt-6 pt-4 border-t border-gray-100 flex justify-end space-x-3">
+                    <button type="button" onclick="document.getElementById('create-psicologo-panel').classList.add('hidden')" class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">Cancelar</button>
+                    <button type="submit" class="inline-flex items-center justify-center px-6 py-3 bg-[var(--color-sura-cyan)] text-white rounded-xl text-sm font-semibold hover:bg-[var(--color-sura-blue)] shadow-sm transition-colors">Crear psicólogo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="space-y-4">
+        {% for item in psicologos_data %}
+        {% with p=item.user perfil=item.perfil %}
+        <div class="p-4 border rounded-lg flex items-center justify-between">
+            <div>
+                <h3 class="font-semibold">{{ p.first_name|default:p.username }}</h3>
+                <p class="text-sm text-gray-500">{{ p.email }}</p>
+                <p class="text-sm text-gray-500">Usuario: {{ p.username }}</p>
+                {% if perfil %}
+                <p class="text-sm text-gray-600">Tel: {{ perfil.telefono }}</p>
+                <div class="flex items-center gap-2 text-sm">
+                    <span class="font-medium">Estado:</span>
+                    {% if perfil.disponible %}
+                    <span class="px-2 py-1 rounded-full bg-green-50 text-green-800 border border-green-100">Disponible</span>
+                    {% else %}
+                    <span class="px-2 py-1 rounded-full bg-red-50 text-red-800 border border-red-100">No disponible</span>
+                    {% endif %}
+                </div>
+                {% else %}
+                <p class="text-sm text-gray-600">Tel: No registrado</p>
+                <div class="text-sm text-yellow-700">Perfil no disponible</div>
+                {% endif %}
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <a href="{% url 'core:editar_psicologo' p.username %}" class="px-4 py-2 text-sm font-medium bg-[var(--color-sura-cyan)] text-white border border-[var(--color-sura-cyan)] rounded-xl shadow-sm hover:bg-[var(--color-sura-blue)] transition-colors">Editar</a>
+                <form method="post" action="{% url 'core:toggle_psicologo' p.username %}" class="inline-block">
+                    {% csrf_token %}
+                    <button type="submit" class="px-4 py-2 text-sm font-medium bg-[var(--color-sura-cyan)] text-white border border-[var(--color-sura-cyan)] rounded-xl shadow-sm hover:bg-[var(--color-sura-blue)] transition-colors">{% if perfil and perfil.disponible %}Marcar no disponible{% else %}Marcar disponible{% endif %}</button>
+                </form>
+            </div>
+        </div>
+        {% endwith %}
+        {% empty %}
+        <p>No hay psicólogos registrados.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    const btnToggleCreate = document.getElementById('btn-toggle-create-psicologo');
+    const btnCloseCreate = document.getElementById('btn-close-create-psicologo');
+    const createPanel = document.getElementById('create-psicologo-panel');
+
+    if (btnToggleCreate && createPanel) {
+        btnToggleCreate.addEventListener('click', () => {
+            createPanel.classList.toggle('hidden');
+        });
+    }
+    if (btnCloseCreate && createPanel) {
+        btnCloseCreate.addEventListener('click', () => {
+            createPanel.classList.add('hidden');
+        });
+    }
+</script>
+{% endblock %}

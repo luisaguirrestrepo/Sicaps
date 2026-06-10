@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificado de Asistencia - SICAPS</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-8">
+    
+    <div class="max-w-4xl w-full">
+                <div class="mb-6 flex justify-end space-x-4 no-print">
+            <a href="{% url 'core:agenda' %}" class="px-5 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 shadow-sm transition-colors font-medium">Volver a la Agenda</a>
+            <button onclick="window.print()" class="px-5 py-2.5 bg-[#0033a0] text-white rounded-lg hover:bg-blue-900 shadow-sm transition-colors font-medium">Imprimir / Guardar PDF</button>
+        </div>
+
+                <div class="bg-white w-full px-16 py-20 shadow-xl border border-gray-100 relative">
+            
+                        <div class="flex justify-between items-start mb-16 border-b border-gray-200 pb-8">
+                <div>
+                    <h1 class="text-4xl font-black text-[#0033a0] tracking-tight">SICAPS<span class="text-[#00a4e4]">.</span></h1>
+                    <p class="text-gray-500 text-sm mt-1">Sistema Integrado de Consultorios Psicológicos</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-gray-600 font-semibold">CERTIFICADO DE ASISTENCIA</p>
+                    <p class="text-gray-400 text-sm mt-1">Expedido el {{ cita.fecha|date:"d \d\e F \d\e Y" }}</p>
+                </div>
+            </div>
+
+                        <div class="space-y-8 text-gray-800 leading-relaxed text-lg">
+                <p>A quien pueda interesar:</p>
+                
+                <p class="text-justify">
+                    Por medio de la presente se certifica que el/la paciente <strong>{{ cita.paciente.nombre_completo }}</strong>, 
+                    identificado(a) en nuestros registros con el documento <strong>{{ cita.paciente.documento }}</strong> y correo electrónico 
+                    <strong>{{ cita.paciente.email }}</strong>, asistió a una cita de consulta psicológica en nuestras instalaciones.
+                </p>
+
+                <div class="bg-gray-50 rounded-lg border border-gray-100 p-6 my-8">
+                    <h3 class="text-[#0033a0] font-bold mb-4">Detalles de la Consulta:</h3>
+                    <ul class="space-y-3 text-base">
+                        <li><span class="font-semibold text-gray-600 w-32 inline-block">Fecha:</span> {{ cita.fecha }}</li>
+                        <li><span class="font-semibold text-gray-600 w-32 inline-block">Hora:</span> {{ cita.hora }}</li>
+                        <li><span class="font-semibold text-gray-600 w-32 inline-block">Estado:</span> Completada</li>
+                    </ul>
+                </div>
+
+                <p class="text-justify">
+                    Se expide este certificado a solicitud del interesado(a) para los fines que estime convenientes, 
+                    dejando constancia de la prestación efectiva del servicio de atención clínica por parte de nuestros profesionales.
+                </p>
+
+                <p>Atentamente,</p>
+            </div>
+
+                        <div class="mt-32 pt-8 border-t border-gray-200 grid grid-cols-2 gap-8">
+                <div>
+                    <div class="h-16 border-b border-gray-400 w-64 mb-2"></div>
+                    <p class="font-bold text-gray-800">Dirección Clínica</p>
+                    <p class="text-gray-500 text-sm">SICAPS Profesional</p>
+                </div>
+            </div>
+
+                        <div class="absolute bottom-10 left-16 right-16 text-center text-xs text-gray-400">
+                <p>Documento generado automáticamente por el sistema SICAPS.</p>
+                <p>ID Transacción: {{ cita.id }}</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

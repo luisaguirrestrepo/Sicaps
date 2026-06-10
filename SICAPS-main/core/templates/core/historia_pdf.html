@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es-co">
+<head>
+    <meta charset="UTF-8">
+    <title>Historia Clínica - {{ paciente.nombre_completo }}</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 12pt;
+            color: #333333;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #0033a0;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #0033a0;
+            font-size: 24pt;
+            margin: 0;
+        }
+        .header p {
+            color: #666666;
+            font-size: 10pt;
+            margin: 5px 0 0 0;
+        }
+        .title {
+            text-align: center;
+            font-size: 16pt;
+            font-weight: bold;
+            margin: 30px 0;
+            color: #00a4e4;
+            text-transform: uppercase;
+        }
+        .patient-info {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .patient-info table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .patient-info td {
+            padding: 5px 0;
+        }
+        .label {
+            font-weight: bold;
+            color: #0033a0;
+            width: 200px;
+        }
+        .session {
+            margin-bottom: 30px;
+            page-break-inside: avoid;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .session-header {
+            background-color: #e5f6fd;
+            padding: 12px 15px;
+            font-weight: bold;
+            color: #0033a0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .session-content {
+            padding: 15px;
+            background-color: #ffffff;
+        }
+        .session-content strong {
+            color: #4a5568;
+            display: block;
+            margin-top: 10px;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 9pt;
+            color: #999999;
+            border-top: 1px solid #eeeeee;
+            padding-top: 10px;
+        }
+        .signature-area {
+            margin-top: 80px;
+            text-align: center;
+            page-break-inside: avoid;
+        }
+        
+        @media print {
+            body {
+                padding: 0;
+                margin: 0;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            // Optional slight delay to ensure fonts render
+            setTimeout(function() {
+                window.print();
+            }, 500);
+        };
+    </script>
+</head>
+<body>
+
+    <div class="header">
+        <h1>SICAPS Consultorios Psicológicos</h1>
+        <p>Avenida Siempre Viva 123, Bogotá - Colombia | Tel: (601) 555-0199</p>
+        <p>NIT: 901.234.567-8 | Resolución MinSalud No. 12345</p>
+    </div>
+
+    <div class="title">Resumen de Historia Clínica con Recomendaciones</div>
+
+    <div class="patient-info">
+        <table>
+            <tr>
+                <td class="label">Nombre del Paciente:</td>
+                <td>{{ resumen.paciente }}</td>
+            </tr>
+            <tr>
+                <td class="label">Documento de Identidad:</td>
+                <td>{{ resumen.documento }}</td>
+            </tr>
+            <tr>
+                <td class="label">Antecedentes Personales:</td>
+                <td>{% if paciente.antecedentes_personales %}{{ paciente.antecedentes_personales|linebreaksbr }}{% else %}<em>No registrados</em>{% endif %}</td>
+            </tr>
+            <tr>
+                <td class="label">Antecedentes Familiares:</td>
+                <td>{% if paciente.antecedentes_familiares %}{{ paciente.antecedentes_familiares|linebreaksbr }}{% else %}<em>No registrados</em>{% endif %}</td>
+            </tr>
+            <tr>
+                <td class="label">Fecha de Apertura:</td>
+                <td>{{ resumen.fecha_apertura }}</td>
+            </tr>
+            <tr>
+                <td class="label">Total de Sesiones:</td>
+                <td>{{ resumen.total_sesiones }}</td>
+            </tr>
+            <tr>
+                <td class="label">Fecha de Impresión:</td>
+                <td>{% now "Y-m-d H:i" %}</td>
+            </tr>
+        </table>
+    </div>
+    
+    {% if resumen.sesiones %}
+        {% for sesion in resumen.sesiones %}
+        <div class="session">
+            <div class="session-header">
+                Evolución Clínica - {{ sesion.fecha }}
+            </div>
+            <div class="session-content">
+                {% if sesion.codigo %}
+                <p><strong>Código diagnóstico:</strong> {{ sesion.codigo }}</p>
+                {% endif %}
+
+                {% if sesion.nombre %}
+                <p><strong>Diagnóstico:</strong></p>
+                <p>{{ sesion.nombre }}</p>
+                {% endif %}
+
+                {% if sesion.descripcion %}
+                <p><strong>Descripción:</strong></p>
+                <p>{{ sesion.descripcion }}</p>
+                {% endif %}
+
+                {% if sesion.profesional %}
+                <p><strong>Profesional tratante:</strong> {{ sesion.profesional }}</p>
+                {% endif %}
+
+                <p><strong>Observaciones y recomendaciones:</strong></p>
+                <p>{{ sesion.observaciones|linebreaksbr }}</p>
+
+                {% if sesion.nivel_riesgo or sesion.estado_paciente %}
+                <p><strong>Riesgo / Estado:</strong> {{ sesion.nivel_riesgo }} / {{ sesion.estado_paciente }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="patient-info" style="text-align: center; padding: 40px;">
+            <p>No se encontraron registros de sesiones clínicas para este paciente.</p>
+        </div>
+    {% endif %}
+
+    <div class="signature-area">
+        <p>________________________________________________</p>
+        <p><strong>Firma del Profesional Tratante</strong></p>
+        <p style="font-size: 10pt; color: #666;">SICAPS - Sistema de Gestión</p>
+    </div>
+    
+    <div class="footer">
+        <p>Documento de uso estrictamente confidencial. Protegido por la Ley 1581 de 2012 de Habeas Data.</p>
+    </div>
+
+</body>
+</html>
