@@ -1,15 +1,12 @@
 
-from mongoengine import connect, disconnect
+from mongoengine import connect
 import os
+import certifi
 
-disconnect()  # cierra conexión previa
-connect(host=os.environ.get("MONGO_URI"))
-
-from mongoengine import connect, connection
-import os
-
-if not connection.get_connection():
-    connect(host=os.environ.get("MONGO_URI"))
+connect(
+    host=os.environ.get("MONGO_URI"),
+    tlsCAFile=certifi.where()
+)
 
 from pathlib import Path
 
