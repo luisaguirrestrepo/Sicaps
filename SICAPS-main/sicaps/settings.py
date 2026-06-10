@@ -1,10 +1,10 @@
 
-from mongoengine import connect
+from mongoengine import connect, disconnect
 import os
 
-MONGO_URI = os.environ.get("MONGO_URI")
+disconnect()  # cierra conexión previa
+connect(host=os.environ.get("MONGO_URI"))
 
-connect(host=MONGO_URI)
 from pathlib import Path
 
 CSRF_TRUSTED_ORIGINS = [
