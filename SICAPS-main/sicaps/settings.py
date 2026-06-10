@@ -1,4 +1,10 @@
+
+from mongoengine import connect
 import os
+
+MONGO_URI = os.environ.get("MONGO_URI")
+
+connect(host=MONGO_URI)
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
